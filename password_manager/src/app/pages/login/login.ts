@@ -29,10 +29,10 @@ import { RouterLink } from '@angular/router';
   ],
   
   providers: [BrowserModule],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  templateUrl: './login.html',
+  styleUrl: './login.scss',
 })
-export class AppComponent {
+export class LoginComponent {
   title = 'Vault Shield';
 
   idValue="" ;

@@ -1,5 +1,5 @@
 import { Component, NgModule } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
@@ -8,11 +8,13 @@ import { CommonModule } from '@angular/common';
 import { PasswordModule } from 'primeng/password';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { Message } from 'primeng/api';
+import { MessagesModule } from 'primeng/messages';
+
+
 
 @Component({
-  selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
@@ -25,32 +27,30 @@ import { RouterLink } from '@angular/router';
     FormsModule,
     RouterModule,
     RouterLink,
-    RouterModule
+    MessagesModule
   ],
   
   providers: [BrowserModule],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  templateUrl: './forgetPassword.html',
+  styleUrl: './forgetPassword.scss',
 })
-export class AppComponent {
-  title = 'Vault Shield';
+export class ForgetPasswordComponent {
+ 
 
-  idValue="" ;
-  passwordValue="" ;
-  constructor(
-    private router: Router
+  messages: Message[]=[] ;
+ 
 
-  ){
-  }
+  email="" ;
+  erreurEmail=false;
 
-  handleAuthentification(identifiant:string,password:string) {
 
-    console.log(identifiant+""+password);
+  handleResetPassword() {
+    if(this.email == "" || this.email== null){
+      this.erreurEmail =true;
+     this.messages=[{ severity: 'error', summary: 'Erreur', detail: "L'adresse mail rentrée n'est pas valide !" }]
+    }
 
-  }
-
-  handleForgetPassword(){
-    this.router.navigate(['/forgetpassword'])
+   
   }
     
 }
