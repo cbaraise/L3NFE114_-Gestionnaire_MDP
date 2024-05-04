@@ -46,9 +46,9 @@ export class ForgetPasswordComponent {
 
 
   messages: Message[]=[] ;
+  erreurEmail=false;
   visibleOtp=false;
   email="" ;
-  erreurEmail=false;
   
   
   handleResetPassword(email:string) {
