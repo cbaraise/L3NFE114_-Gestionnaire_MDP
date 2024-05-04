@@ -1,0 +1,81 @@
+<div class="card flex flex-column justify-content-center mt-5 mb-4 w-full ">
+    <div  class="text-center">
+      <img src="assets\images\logo.png" width="700" />
+      <h3 >Votre Gestionnaire de mots de passe préféré !</h3>
+    <div class="card flex justify-content-center">
+        <p-selectButton [options]="stateOptions" [unselectable]="true" width="10px" [(ngModel)]="selectedOption"  optionLabel="label" optionValue="value"></p-selectButton>
+    </div>
+  </div>
+</div>
+@if (selectedOption == 'login') {
+
+  <div class="fadeinleft animation-duration-500 animation flex align-items-center justify-content-center">
+  <div class="flex flex-column gap-3 mt-5 ">
+    <div class="card flex justify-content-center">
+      <h3>Connexion</h3>
+      </div>
+      @if (erreurLogin) {
+        <p-messages [value]="messages" [enableService]="false" [closable]="false"></p-messages>
+      }
+      <div class="card flex justify-content-center mb-4">
+        <span class="p-float-label">
+          <input [(ngModel)]="email" pInputText  [ngClass]="{'ng-invalid ng-dirty':erreurLogin}" id="username" class="input-color" required />
+          <label for="username" class="label-color">Adresse mail</label>
+        </span>
+      </div>
+      <div class="card flex justify-content-center mb-4">
+        <span class="p-float-label">
+          <p-password  [(ngModel)]="passwordValue" [feedback]="false" [toggleMask]="true" class="input-color" required></p-password>
+          <label for="password" class="label-color">Mot de passe</label>
+        </span>
+      </div>
+      <div class="card flex justify-content-center">
+    
+        <a [routerLink]="['/forgetpassword']" >Mot de passe oublié ?</a>
+      </div>
+      <div class="card flex justify-content-center">
+        <p-button (click)="handleAuthentification(email,passwordValue)"> Se connecter</p-button>
+      </div>
+    </div>
+  </div>
+}
+@else {
+  <div class="fadeinright animation-duration-500 animation flex align-items-center justify-content-center ">
+
+  <div class="flex flex-column gap-3 ">
+    <div class="card flex justify-content-center">
+      <h3>Inscription</h3>
+      </div>
+      <div class="card flex justify-content-center mb-2 ">
+        <span class="p-float-label">
+          <input [(ngModel)]="username" pInputText id="username" class="input-color" required/>
+          <label for="username" class="label-color">Nom d'utilisateur</label>
+        </span>
+      </div>
+      <div class="card flex justify-content-center mb-2">
+        <span class="p-float-label">
+          <input [(ngModel)]="email" pInputText id="username" class="input-color" required/>
+          <label for="username" class="label-color">Adresse mail</label>
+        </span>
+      </div>
+      <div class="card flex justify-content-center mb-2">
+        <span class="p-float-label">
+          <p-password [(ngModel)]="passwordValue"  [feedback]="false" [toggleMask]="true" class="input-color" required></p-password>
+          <label for="password" class="label-color">Mot de passe</label>
+        </span>
+      </div>
+      <div class="card flex justify-content-center mb-2">
+        <span class="p-float-label">
+          <p-password  [(ngModel)]="passwordValue2"  [feedback]="false" [toggleMask]="true" class="input-color" required></p-password>
+          <label for="password" class="label-color">Confirmation mot de passe</label>
+        </span>
+      </div>
+      <div class="card flex justify-content-center">
+        <p-button (click)="handleRegister(email,username,passwordValue,passwordValue2)"> Valider</p-button>
+      </div>
+    </div>
+  </div>
+}
+  
+
+

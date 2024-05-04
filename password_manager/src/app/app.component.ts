@@ -10,6 +10,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -25,32 +27,16 @@ import { RouterLink } from '@angular/router';
     FormsModule,
     RouterModule,
     RouterLink,
-    RouterModule
+    RouterModule,
+    HttpClientModule
   ],
   
-  providers: [BrowserModule],
+  providers: [BrowserModule, provideAnimations()],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
   title = 'Vault Shield';
 
-  idValue="" ;
-  passwordValue="" ;
-  constructor(
-    private router: Router
-
-  ){
-  }
-
-  handleAuthentification(identifiant:string,password:string) {
-
-    console.log(identifiant+""+password);
-
-  }
-
-  handleForgetPassword(){
-    this.router.navigate(['/forgetpassword'])
-  }
-    
 }
+

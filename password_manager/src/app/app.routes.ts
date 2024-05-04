@@ -3,7 +3,7 @@ import { AppComponent } from './app.component';
 import { ForgetPasswordComponent } from './pages/forgetPassword/forgetPassword';
 import { PageNotFoundComponent } from './pages/notFound/notFound';
 import { NgModule } from '@angular/core';
-import { LoginComponent } from './pages/login/login';
+import { LoginComponent } from './pages/loginRegister/loginRegister';
 
 
 export const routes: Routes = [
@@ -12,6 +12,6 @@ export const routes: Routes = [
 
     {path:'forgetpassword' , component:ForgetPasswordComponent},
 
-    { path: '**', component: PageNotFoundComponent }
+    { path: '**', component: PageNotFoundComponent },
 ];
 

@@ -10,6 +10,7 @@
     "@angular/platform-browser": "^17.2.0",
     "@angular/platform-browser-dynamic": "^17.2.0",
     "@angular/router": "^17.2.0",
+    "angular-animations": "^0.11.0",
     "primeflex": "^3.3.1",
     "primeng": "^17.12.0",
     "rxjs": "~7.8.0",
@@ -74,19 +75,19 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "3818618516485211356"
+        "hash": "11098661466997336334"
       },
       {
         "file": "package.json",
-        "hash": "18440071284076405938"
+        "hash": "14252442066539856362"
       },
       {
         "file": "src/app/app.component.html",
-        "hash": "2378845880075536995"
+        "hash": "17385897758380840601"
       },
       {
         "file": "src/app/app.component.scss",
-        "hash": "3244421341483603138"
+        "hash": "4250155489668692106"
       },
       {
         "file": "src/app/app.component.spec.ts",
@@ -94,7 +95,7 @@
       },
       {
         "file": "src/app/app.component.ts",
-        "hash": "2670026030604905078"
+        "hash": "3844790948521614646"
       },
       {
         "file": "src/app/app.config.ts",
@@ -102,15 +103,71 @@
       },
       {
         "file": "src/app/app.routes.ts",
-        "hash": "809736233805555256"
+        "hash": "10066256520880674981"
+      },
+      {
+        "file": "src/app/environnement/environnement.ts",
+        "hash": "14996491824583256257"
+      },
+      {
+        "file": "src/app/models/loginRegister.models.ts",
+        "hash": "15636965406573641172"
+      },
+      {
+        "file": "src/app/pages/forgetPassword/forgetPassword.html",
+        "hash": "3697990933830202511"
+      },
+      {
+        "file": "src/app/pages/forgetPassword/forgetPassword.scss",
+        "hash": "11661846027141383029"
+      },
+      {
+        "file": "src/app/pages/forgetPassword/forgetPassword.ts",
+        "hash": "4002280492986343963"
+      },
+      {
+        "file": "src/app/pages/loginRegister/loginRegister.html",
+        "hash": "5074178706808989182"
+      },
+      {
+        "file": "src/app/pages/loginRegister/loginRegister.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/pages/loginRegister/loginRegister.ts",
+        "hash": "13078188167202087283"
+      },
+      {
+        "file": "src/app/pages/notFound/notFound.html",
+        "hash": "2924629024226666481"
+      },
+      {
+        "file": "src/app/pages/notFound/notFound.scss",
+        "hash": "14268141091248438837"
+      },
+      {
+        "file": "src/app/pages/notFound/notFound.ts",
+        "hash": "15924828462070914519"
+      },
+      {
+        "file": "src/app/services/loginRegister.services.ts",
+        "hash": "7654718509506898538"
       },
       {
         "file": "src/assets/.gitkeep",
         "hash": "3244421341483603138"
       },
       {
+        "file": "src/assets/images/logo.png",
+        "hash": "16140904036919130000"
+      },
+      {
+        "file": "src/assets/images/notfound.png",
+        "hash": "6191658402524668085"
+      },
+      {
         "file": "src/index.html",
-        "hash": "12309953776139192262"
+        "hash": "1274656466490079250"
       },
       {
         "file": "src/main.ts",
@@ -118,7 +175,7 @@
       },
       {
         "file": "src/styles.scss",
-        "hash": "14086686070965931"
+        "hash": "6877333063085781098"
       },
       {
         "file": "tsconfig.app.json",

@@ -3466,6 +3466,15 @@
         "hash": "sha512-5p6WTN0DdTGVQk6VjcEju19IgaHudalcfabD7yhDGeA6bcQnmL+CpveLJq/3hvfwd1aof6L386Ougkx6RfyMIQ=="
       }
     },
+    "npm:angular-animations": {
+      "type": "npm",
+      "name": "npm:angular-animations",
+      "data": {
+        "version": "0.11.0",
+        "packageName": "angular-animations",
+        "hash": "sha512-P2RuOe+T97bhgGDLtOYK9V45QA5y+kFUxoJfRAua8Ymo0bI5lWyw8oiVmBoEIZUU+nooYoJvQXgVKuZJA7/z3g=="
+      }
+    },
     "npm:ansi-colors": {
       "type": "npm",
       "name": "npm:ansi-colors",
@@ -13462,6 +13471,18 @@
       {
         "source": "npm:ajv-keywords",
         "target": "npm:fast-deep-equal",
+        "type": "static"
+      }
+    ],
+    "npm:angular-animations": [
+      {
+        "source": "npm:angular-animations",
+        "target": "npm:@angular/animations",
+        "type": "static"
+      },
+      {
+        "source": "npm:angular-animations",
+        "target": "npm:tslib",
         "type": "static"
       }
     ],
