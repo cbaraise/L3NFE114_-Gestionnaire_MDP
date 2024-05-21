@@ -2,5 +2,5 @@
 
 export const environnement = {
     production:false,
-    baseUri:'http://10.111.22.149:8080/'
+    baseUri:'http://127.0.0.1:8080'
 }

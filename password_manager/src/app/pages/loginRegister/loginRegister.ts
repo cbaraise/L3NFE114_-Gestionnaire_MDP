@@ -11,9 +11,10 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Message, MessageService } from 'primeng/api';
 import { MessagesModule } from 'primeng/messages';
+import { LoginRegisterService } from '../../services/loginRegister.services';
 
 @Component({
   selector: 'app-root',
@@ -35,12 +36,12 @@ import { MessagesModule } from 'primeng/messages';
     MessagesModule
   ],
   
-  providers: [BrowserModule],
+  providers: [BrowserModule , LoginRegisterService],
   templateUrl: './loginRegister.html',
   styleUrl: './loginRegister.scss',
 })
 export class LoginComponent {
-  constructor()
+  constructor(private loginRegisterService:LoginRegisterService)
   {}
   title = 'Vault Shield';
   messages: Message[]=[] ;
@@ -67,13 +68,16 @@ export class LoginComponent {
         this.erreurLogin=true;
         this.messages=[{ severity: 'error', summary: 'Erreur ', detail: "Le mot de passe rentrée est vide !" }];
       }
-    
 
+     
+    this.loginRegisterService.authentification(identifiant,password);
+
+      
+    
   }
 
   handleRegister(email:string,usernames:string,passwordValue:string,passwordValue2:string){
     
-
   }
 
     

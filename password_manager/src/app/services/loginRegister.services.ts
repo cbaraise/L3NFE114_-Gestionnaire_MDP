@@ -7,7 +7,7 @@ import { environnement } from "../environnement/environnement";
     providedIn: 'root'
 })
 export class LoginRegisterService {
-    endpointUrl = environnement.baseUri + `/auth/`;
+    endpointUrl = environnement.baseUri + `/auth/login`;
 
     constructor(private httpClient: HttpClient) { }
 
