@@ -1,4 +1,4 @@
-import { Component, NgModule } from '@angular/core';
+import { Component, NgModule, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { DividerModule } from 'primeng/divider';
@@ -15,6 +15,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Message, MessageService } from 'primeng/api';
 import { MessagesModule } from 'primeng/messages';
 import { LoginRegisterService } from '../../services/loginRegister.services';
+import { loginRegister } from '../../models/loginRegister.models';
 
 @Component({
   selector: 'app-root',
@@ -40,9 +41,14 @@ import { LoginRegisterService } from '../../services/loginRegister.services';
   templateUrl: './loginRegister.html',
   styleUrl: './loginRegister.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   constructor(private loginRegisterService:LoginRegisterService)
   {}
+  ngOnInit(): void {
+   //
+  }
+  data: any[] = [];
+  errorMessage: string = '';
   title = 'Vault Shield';
   messages: Message[]=[] ;
   erreurLogin=false;
@@ -69,9 +75,19 @@ export class LoginComponent {
         this.messages=[{ severity: 'error', summary: 'Erreur ', detail: "Le mot de passe rentrée est vide !" }];
       }
 
-     
-    this.loginRegisterService.authentification(identifiant,password);
-
+     console.log("on passe par là : handleAuthentitfication")
+    this.loginRegisterService.authentification(identifiant,password).subscribe({
+      next: (response) => {
+        console.log('Authentification successful', response);
+        // Traitez la réponse ici, par exemple :
+        // this.router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        console.error('Authentification error', error);
+        this.erreurLogin = true;
+        this.messages = [{ severity: 'error', summary: 'Erreur Authentification', detail: "La tentative de connexion a échoué." }];
+      }
+    });
       
     
   }

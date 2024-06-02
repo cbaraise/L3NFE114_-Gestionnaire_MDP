@@ -1,29 +1,28 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Injectable, inject, signal } from "@angular/core";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { Observable, throwError } from "rxjs";
 import { loginRegister } from "../models/loginRegister.models";
 import { environnement } from "../environnement/environnement";
+import { HttpHeaders } from '@angular/common/http';
+import * as rxjs from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 @Injectable({
     providedIn: 'root'
 })
 export class LoginRegisterService {
-    endpointUrl = environnement.baseUri + `/auth/login`;
-
     constructor(private httpClient: HttpClient) { }
+    
+    // endpointUrl = environnement.baseUri + `:/auth/me`;
+    endpointUrl ="http://127.0.0.1:8080/auth/login";
 
     authentification(email: string, password: string): Observable<any> {
-        return new Observable(observer => {
-            this.httpClient.post(this.endpointUrl, { email, password }).subscribe(
-                (result: any) => {
-                    const authentif = new loginRegister();
-                    authentif.loadFromJson(result);
-                    observer.next(authentif);
-                    observer.complete();
-                },
-                error => {
-                    observer.error(error);
-                }
-            );
-        });
+        const body = { email, password };
+        return this.httpClient.post<any>(this.endpointUrl, body).pipe(
+            catchError(this.handleError)
+        );
     }
+    private handleError(error: HttpErrorResponse) {
+        console.error('DataService: error in getData()', error);
+        return throwError('Une erreur s\'est produite; veuillez réessayer plus tard.');
+      }
 }

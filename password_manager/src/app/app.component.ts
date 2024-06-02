@@ -28,8 +28,9 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     RouterModule,
     RouterLink,
     RouterModule,
-    HttpClientModule
+    HttpClientModule,
   ],
+  
   
   providers: [BrowserModule, provideAnimations()],
   templateUrl: './app.component.html',
