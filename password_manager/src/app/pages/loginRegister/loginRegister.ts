@@ -15,8 +15,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Message, MessageService } from 'primeng/api';
 import { MessagesModule } from 'primeng/messages';
 import { LoginRegisterService } from '../../services/loginRegister.services';
-import { loginRegister } from '../../models/loginRegister.models';
-
+import { ToastModule } from 'primeng/toast';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -34,67 +33,200 @@ import { loginRegister } from '../../models/loginRegister.models';
     RouterModule,
     SelectButtonModule,
     HttpClientModule,
-    MessagesModule
+    MessagesModule,
+    ToastModule
   ],
-  
-  providers: [BrowserModule , LoginRegisterService],
+
+  providers: [BrowserModule, LoginRegisterService, MessageService],
   templateUrl: './loginRegister.html',
   styleUrl: './loginRegister.scss',
 })
-export class LoginComponent implements OnInit {
-  constructor(private loginRegisterService:LoginRegisterService)
-  {}
-  ngOnInit(): void {
-   //
-  }
+export class LoginComponent {
+  constructor(
+    private loginRegisterService: LoginRegisterService,
+    private router: Router,
+    private messageService: MessageService
+  ) {}
+
   data: any[] = [];
   errorMessage: string = '';
   title = 'Vault Shield';
-  messages: Message[]=[] ;
-  erreurLogin=false;
+  messages: Message[] = [];
+  messagesErreurRegister: Message[] = [];
+  erreurLogin = false;
+  erreurRegister = false;
 
-  stateOptions: any[] = [{ label: 'Connexion', value: 'login' },{ label: 'Inscription', value: 'register' }];
-  email="" ;
-  passwordValue="" ;
-  passwordValue2="" ;
-  username=""
+  stateOptions: any[] = [
+    { label: 'Connexion', value: 'login' },
+    { label: 'Inscription', value: 'register' },
+  ];
+  email = '';
+  passwordValue = '';
+  passwordValue2 = '';
+  username = '';
   selectedOption: string = 'login';
 
-
-  handleAuthentification(identifiant:string,password:string) {
+  handleAuthentification(identifiant: string, password: string) {
+    this.erreurLogin=false;
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const isValidEmail = emailRegex.test(identifiant);
 
-    if( !isValidEmail){
-      this.erreurLogin =true;
-      this.messages=[{ severity: 'error', summary: 'Erreur Email', detail: "L'adresse mail rentrée n'est pas valide !" }]
+    if (!isValidEmail || identifiant == '') {
+      this.erreurLogin = true;
+      this.messages = [
+        {
+          severity: 'error',
+          summary: 'Erreur Email',
+          detail: "L'adresse mail rentrée n'est pas valide !",
+        },
+      ];
     }
-    if(password === "" || password === null)
-      {
-        this.erreurLogin=true;
-        this.messages=[{ severity: 'error', summary: 'Erreur ', detail: "Le mot de passe rentrée est vide !" }];
-      }
-
-     console.log("on passe par là : handleAuthentitfication")
-    this.loginRegisterService.authentification(identifiant,password).subscribe({
-      next: (response) => {
-        console.log('Authentification successful', response);
-        // Traitez la réponse ici, par exemple :
-        // this.router.navigate(['/dashboard']);
-      },
-      error: (error) => {
-        console.error('Authentification error', error);
-        this.erreurLogin = true;
-        this.messages = [{ severity: 'error', summary: 'Erreur Authentification', detail: "La tentative de connexion a échoué." }];
-      }
-    });
-      
+    if (password === '' || password === null) {
+      this.erreurLogin = true;
+      this.messages = [
+        {
+          severity: 'error',
+          summary: 'Erreur ',
+          detail: 'Le mot de passe rentrée est vide !',
+        },
+      ];
+    }
+    if (!this.erreurLogin) {
+    this.loginConnexion(identifiant, password);
+    }
+  }
+  loginConnexion(identifiant: string, password: string) {
+  
+      this.loginRegisterService
+        .authentification(identifiant, password)
+        .subscribe({
+          next: (response: any) => {
+            if (response.status != 'failed') {
+              console.log('Authentification successful', response);
+              this.router.navigate(['auth/dashboard']);
+            } else {
+              this.erreurLogin = true;
+              this.messages = [
+                {
+                  severity: 'error',
+                  summary: 'Erreur Authentification',
+                  detail:
+                    "Le mot de passe ou l'adresse mail rentrée est incorrect.",
+                },
+              ];
+            }
+          },
+          error: (error) => {
+            console.error('Authentification error', error);
+            this.erreurLogin = true;
+            this.messages = [
+              {
+                severity: 'error',
+                summary: 'Erreur Authentification',
+                detail: 'La tentative de connexion a échoué.',
+              },
+            ];
+          },
+        });
     
   }
 
-  handleRegister(email:string,usernames:string,passwordValue:string,passwordValue2:string){
-    
-  }
+  handleRegister(
+    email: string,
+    usernames: string,
+    passwordValue: string,
+    passwordValue2: string
+  ) {
+    console.log('on passe ici');
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const isValidEmail = emailRegex.test(email);
+    this.erreurRegister=false;
 
+    if (!isValidEmail || email == '') {
+      this.erreurRegister = true;
+      this.messagesErreurRegister = [
+        {
+          severity: 'error',
+          summary: 'Erreur Email',
+          detail: "L'adresse mail rentrée n'est pas valide !",
+        },
+      ];
+    }
+    if (
+      passwordValue != passwordValue2 ||
+      passwordValue == '' ||
+      passwordValue2 == ''
+    ) {
+      this.erreurRegister = true;
+      this.messagesErreurRegister = [
+        {
+          severity: 'error',
+          summary: 'Erreur mot de passe',
+          detail: 'Les mots de passe saisies ne sont pas les mêmes !',
+        },
+      ];
+    }
+    if(passwordValue.length < 12 || passwordValue2.length<12){
+      this.erreurRegister = true;
+      this.messagesErreurRegister = [
+        {
+          severity: 'error',
+          summary: 'Erreur mot de passe',
+          detail: 'Les mots de passe saisies ont une taille inférieur à 12 caractères !',
+        },
+      ];
+    }
+
+    if (usernames == null || usernames == '') {
+      this.erreurRegister = true;
+      this.messagesErreurRegister = [
+        {
+          severity: 'error',
+          summary: "Erreur nom d'utilisateur",
+          detail: "Le nom d'utilisateur est vide !",
+        },
+      ];
+    }
+    if (!this.erreurRegister) {
+      this.registerConnexion(
+        email,
+        usernames,
+        passwordValue
+      );
+    }
+  }
+  registerConnexion(
+    email: string,
+    usernames: string,
+    passwordValue: string
+  ) {
+    this.loginRegisterService
+      .register(email, usernames, passwordValue)
+      .subscribe({
+        next: (response: any) => {
+        
+            console.log('Register successful', response);
+            this.username="";
+            this.email="";
+            this.passwordValue="";
+            this.passwordValue2="";
+            this.selectedOption= "login";
+            this.messageService.add({ severity: 'success', summary: 'Inscription', detail: 'Inscription réussi !' });
     
+            
+          
+        },
+        error: (error) => {
+          console.error('Authentification error', error);
+          this.erreurRegister = true;
+          this.messagesErreurRegister = [
+            {
+              severity: 'error',
+              summary: "Erreur d'Enregistrement",
+              detail: "La tentative d'Enregistrement a échoué.",
+            },
+          ];
+        },
+      });
+  }
 }

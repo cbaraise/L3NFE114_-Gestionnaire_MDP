@@ -1,5 +1,5 @@
-import { Component, NgModule } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, NgModule, OnInit } from '@angular/core';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
@@ -8,36 +8,33 @@ import { CommonModule } from '@angular/common';
 import { PasswordModule } from 'primeng/password';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { MenuItem, Message } from 'primeng/api';
+import { MessagesModule } from 'primeng/messages';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InputOtpModule } from 'primeng/inputotp';
+import { Observable, Subscription, timer } from 'rxjs';
 
 @Component({
-  selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
     InputTextModule,
     PasswordModule,
-    DividerModule,
     CommonModule,
     ButtonModule,
     TooltipModule,
     FormsModule,
-    RouterModule,
     RouterLink,
-    RouterModule,
-    HttpClientModule,
+    MessagesModule,
+    InputOtpModule
   ],
-  
-  
-  providers: [BrowserModule, provideAnimations()],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  providers:[],
+  templateUrl: './dashboard.html',
+  styleUrl: './dashboard.scss',
 })
-export class AppComponent {
-  title = 'Vault Shield';
+export class DashboardComponent {
+
 
 }
-

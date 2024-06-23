@@ -1,11 +1,9 @@
 
-export class loginRegister{
-    statuts='';
-    message='';
-    acces_token="";
-    refresh_token="";
+export interface loginRegister{
+    status:string;
+    message:string;
+    acces_token:string;
+    refresh_token:string;
 
-    loadFromJson(jsonElement:any){
-        Object.assign(this,jsonElement)
-    }
+   
 }
