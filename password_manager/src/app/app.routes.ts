@@ -4,6 +4,7 @@ import { PageNotFoundComponent } from './pages/notFound/notFound';
 import { LoginComponent } from './pages/loginRegister/loginRegister';
 import { DashboardComponent } from './pages/dashboard/dashboard';
 import { NgModule } from '@angular/core';
+import { AuthGuard } from './auth.guard';
 
 
 
@@ -17,8 +18,6 @@ export const routes: Routes = [
 
     { path: '**', component: PageNotFoundComponent },
 
-    { path: 'auth/dashboard', 
-    component: DashboardComponent,
-    //TODO : mettre en place un guard
-},
+    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+
 ]

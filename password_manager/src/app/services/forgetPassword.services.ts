@@ -20,10 +20,20 @@ export class ForgetPasswordServices {
         );
   }
 
-  verifOtpCode(email:string ,OtpCode: string) {
+  verifOtpCode(email:string ,otp: string) {
     const endpointUrl = environnement.baseUri + `/auth/verify_otp`;
-        const body = { email , OtpCode };
+        const body = { email , otp };
+        console.log(body)
         return this.httpClient.post<any>(endpointUrl, body).pipe(
+            catchError(this.handleError)
+        );
+  }
+
+  changePassword(new_password:string , confirm_password:string , urlreset:string){
+    const endpointUrl = environnement.baseUri + `/auth/change_password/`+urlreset;
+        const body = { new_password , confirm_password };
+        console.log(body)
+        return this.httpClient.put<any>(endpointUrl, body).pipe(
             catchError(this.handleError)
         );
   }

@@ -17,7 +17,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { passwordforget } from '../../models/forgetPassword.models';
 import { ToastModule } from 'primeng/toast';
 import { otpCode } from '../../models/otpCode.models';
-
+import { DialogModule } from 'primeng/dialog';
+import { changePass } from '../../models/changePass.models';
 @Component({
   standalone: true,
   imports: [
@@ -33,7 +34,8 @@ import { otpCode } from '../../models/otpCode.models';
     InputOtpModule,
     HttpClientModule,
     ProgressSpinnerModule,
-    ToastModule
+    ToastModule,
+    DialogModule
   ],
   providers: [BrowserModule , MessageService , ForgetPasswordComponent],
   templateUrl: './forgetPassword.html',
@@ -41,7 +43,9 @@ import { otpCode } from '../../models/otpCode.models';
 })
 export class ForgetPasswordComponent {
   isLoading=false;
+  urlreset="";
   constructor(
+    private router: Router,
     private forgetPasswordService: ForgetPasswordServices,
     private messageService: MessageService
     ) {}
@@ -51,9 +55,11 @@ export class ForgetPasswordComponent {
     messages: Message[] = [];
     erreurEmail = false;
     visibleOtp = false;
+    passwordChangeVisible=false;
+    newPassword="";
+    newPassword2="";
     email = '';
     Otpcode="";
-    passwordChangeVisible=false;
 
   handleResetPassword(email: string) {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -116,8 +122,7 @@ export class ForgetPasswordComponent {
     console.log(email+''+Otpcode)
     this.forgetPasswordService.verifOtpCode(email ,Otpcode).subscribe({
     next: (response: otpCode) => {
-      console.log('Authentification successful', response);
-      console.log(response.status)
+      this.urlreset=response.urlreset;
       if(response.status== 'success'){
         console.log("test")
         this.passwordChangeVisible = true;
@@ -147,5 +152,40 @@ export class ForgetPasswordComponent {
     this.passwordforget(this.email)
     this.messageService.add({ severity: 'success', summary: 'Code OTP', detail: 'Un nouveau code vous à été envoyé' });
 
+  }
+
+  ValidNewPassword(newPassword:string,newPassword2:string){
+      if(newPassword != newPassword2 || newPassword == "" || newPassword2==""){
+        this.messageService.add({ severity: 'error', summary: 'Changement de mot de passe', detail: 'mot de passe différent' });
+      }
+      else{
+          this.forgetPasswordService.changePassword(newPassword, newPassword2,this.urlreset).subscribe({
+            next: (response: changePass) => {
+              if(response.status== 'success'){
+                this.messageService.add({ severity: 'success', summary: 'Code OTP', detail: 'Nouveau mot de passe enregistré vous allez être redirigé ' });
+                setTimeout(() => {
+                  this.router.navigate(['/']);
+                }, 5000)
+          
+              }
+              if(response.status== 'failed'){
+                this.isLoading = false;
+                this.messageService.add({ severity: 'error', summary: 'changement de mot de passe échoué', detail: 'le changement de mot de passe à échoué' });
+              }
+            
+            },
+            error: (error) => {
+              console.error('Authentification error', error);
+              this.isLoading = false;
+              this.messages = [
+                {
+                  severity: 'error',
+                  summary: 'Erreur',
+                  detail: "Erreur lors du changement de mot de passe",
+                },
+              ];
+            },
+          });
+      }
   }
 }
