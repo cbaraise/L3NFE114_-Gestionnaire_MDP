@@ -13,7 +13,6 @@ import { RouterLink } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './services/interceptor/auth.interceptor';
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -33,7 +32,7 @@ import { AuthInterceptor } from './services/interceptor/auth.interceptor';
   ],
   
   
-  providers: [BrowserModule, provideAnimations() ,{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+  providers: [BrowserModule, provideAnimations() ,{ provide: HTTP_INTERCEPTORS ,useClass: AuthInterceptor, multi: true }],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
