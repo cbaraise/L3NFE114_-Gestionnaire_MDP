@@ -3,7 +3,7 @@
     <img src="assets\images\logo.png" width="700" />
     <h3>Votre Gestionnaire de mots de passe préféré !</h3>
   </div>
-  <p>Bonjour, Bienvenu {{loginData!.username}}</p>
+  <p>Bonjour, Bienvenue {{loginData!.username}}</p>
   <p-button (onClick)="AddVault()">Ajouter un mot de passe </p-button>
   <p-button (onClick)="showAddCategorie()">Ajouter une catégorie</p-button>
 
@@ -19,30 +19,63 @@
   <p-button (onClick)="disconnect(loginData!.access_token)">Deconnexion</p-button>
 </div>
 @if(sidebarVisible){
-<p-sidebar [(visible)]="sidebarVisible" [dismissible]="true" (onHide)="onSidebarHide()" position="right">
-  <input type="text" pInputText [(ngModel)]="infoCoffre.urllogo" />
-  <h3>{{infoCoffre.sitename}}</h3>
-  Email:
-  <input type="text" pInputText [(ngModel)]="infoCoffre.urlsite" />
-  <input type="text" pInputText [(ngModel)]="infoCoffre.email" />
-  <input type="text" pInputText [(ngModel)]="infoCoffre.username" />
-  <p-password [(ngModel)]="infoCoffre.password" [feedback]="false" [toggleMask]="true" />
-  <textarea type="text" pInputText [(ngModel)]="infoCoffre.note"></textarea>
+<p-sidebar [(visible)]="sidebarVisible" position="right">
+  <div class="form-container">
+    <div class="flex align-items-center gap-2 justify-content-between">
+      <p-avatar image="{{infoCoffre.urllogo}}" placeholder="logo" width="100" />
+      <span class="font-bold text-lg">
+        {{infoCoffre.sitename}}
+      </span>
+      @if(edit){
+      <button pButton type="button" label="" (click)="onCancel()">
+        Retour
+      </button>
+      }
+      @else {
+      <button pButton type="button" icon="pi pi-trash" label="" (click)="editVault()">
+        Edit
+      </button>
+      }
+    </div>
 
+    <div class="categories">
+      <label>Categories:</label>
+      <p-dropdown [options]="listelibCategorie" [(ngModel)]="listelibCategorie" optionLabel="name" class="p-5"
+        placeholder="Selectionner une catégorie" />
+    </div>
 
+    <label>Url:</label>
+    <input type="text" pInputText [(ngModel)]="infoCoffre.urlsite" placeholder="Site Web" />
+    <label>Username:</label>
+    <input type="text" pInputText [(ngModel)]="infoCoffre.username" placeholder="Username" />
+    <label>Email:</label>
+    <input type="text" pInputText [(ngModel)]="infoCoffre.email" placeholder="Email" />
+    <label>Mot de passe:</label>
+    <p-password [(ngModel)]="infoCoffre.password" [feedback]="false" [toggleMask]="true"
+      placeholder="Mot de passe"></p-password>
+    <label>Notes:</label><br>
+    <textarea pInputTextarea [(ngModel)]="infoCoffre.note" placeholder="Note"></textarea>
+    <br>
+    <div class="buttons flex justify-content-between p-5 gap-2">
+      <button pButton type="button" label="Annuler" (click)="onCancel()"></button>
+      <button pButton type="button" label="Enregistrer" (click)="onSave()"></button>
+    </div>
+  </div>
 </p-sidebar>
+
 }
 
 
 <p-dialog header="Edit Profile" [modal]="true" [(visible)]="addMenuVault" [style]="{ width: '25rem' }">
-  <p-dropdown [options]="listelibCategorie" [(ngModel)]="listelibCategorie" optionLabel="name" placeholder="Selectionner une catégorie" />
+  <p-dropdown [options]="listelibCategorie" [(ngModel)]="listelibCategorie" optionLabel="name"
+    placeholder="Selectionner une catégorie" />
 </p-dialog>
 
 
 
-  <p-dialog header="Edit Profile" [modal]="true" [closable]="true" [(visible)]="visibleAddCategorie" [style]="{ width: '25rem' }">
-    <h3>Ajouter une nouvelle catégorie</h3>
-    <input type="text" pInputText [(ngModel)]="newCategorie" />
-    <p-button (click)="addNewCategorie()">Valider</p-button>
-  </p-dialog>
-  
+<p-dialog header="Edit Profile" [modal]="true" [closable]="true" [(visible)]="visibleAddCategorie"
+  [style]="{ width: '25rem' }">
+  <h3>Ajouter une nouvelle catégorie</h3>
+  <input type="text" pInputText [(ngModel)]="newCategorie" />
+  <p-button (click)="addNewCategorie()">Valider</p-button>
+</p-dialog>
