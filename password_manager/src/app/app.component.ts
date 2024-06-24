@@ -11,7 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './services/interceptor/auth.interceptor';
 
 @Component({
   selector: 'app-root',
@@ -32,7 +33,7 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   
   
-  providers: [BrowserModule, provideAnimations()],
+  providers: [BrowserModule, provideAnimations() ,{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
