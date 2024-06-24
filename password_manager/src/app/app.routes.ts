@@ -10,14 +10,15 @@ import { AuthGuard } from './auth.guard';
 
   
 export const routes: Routes = [
-    
+    { path: '', redirectTo: '/login', pathMatch: 'full' },  // Page par défaut
+    { path: 'login', component: LoginComponent },
     
     {path:'' , component:LoginComponent},
 
     {path:'forgetpassword' , component:ForgetPasswordComponent},
 
-    { path: '**', component: PageNotFoundComponent },
+   // { path: '**', component: PageNotFoundComponent },
 
-    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+    { path: 'dashboard', component: DashboardComponent, },
 
 ]

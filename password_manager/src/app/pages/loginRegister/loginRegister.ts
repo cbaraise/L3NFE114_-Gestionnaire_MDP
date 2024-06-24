@@ -16,6 +16,8 @@ import { Message, MessageService } from 'primeng/api';
 import { MessagesModule } from 'primeng/messages';
 import { LoginRegisterService } from '../../services/loginRegister.services';
 import { ToastModule } from 'primeng/toast';
+import { AuthService } from '../../services/authentification.services';
+import { loginRegister } from '../../models/loginRegister.models';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -44,6 +46,7 @@ import { ToastModule } from 'primeng/toast';
 export class LoginComponent {
   constructor(
     private loginRegisterService: LoginRegisterService,
+    private authService:AuthService,
     private router: Router,
     private messageService: MessageService
   ) {}
@@ -99,12 +102,12 @@ export class LoginComponent {
     this.loginRegisterService
       .authentification(identifiant, password)
       .subscribe({
-        next: (response: any) => {
+        next: (response: loginRegister) => {
           if (response.status != 'failed') {
             console.log('Authentification successful', response);
-            setTimeout(() => {
-              this.router.navigate(['dashboard']);
-            }, 1000);
+            this.loginRegisterService.setLoginData(response)
+            this.router.navigate(['/dashboard']);
+                        
             } else {
             this.erreurLogin = true;
             this.messages = [
