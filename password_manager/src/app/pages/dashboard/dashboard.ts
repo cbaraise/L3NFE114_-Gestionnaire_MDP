@@ -23,17 +23,20 @@ import { secretkey } from '../../models/secretkey.models';
 import { infoCoffre } from '../../models/infoCoffre.models';
 import { newVault } from '../../models/newVault.models';
 import { DropdownModule } from 'primeng/dropdown';
-import {  categories } from '../../models/categories.models';
+import { categories } from '../../models/categories.models';
 import { addCategorie } from '../../models/addCategorie.models';
 import { DialogModule } from 'primeng/dialog';
 import { PrimeIcons } from 'primeng/api';
 import { vaultGroup } from '../../models/vaultGroup.models';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { admin, users } from '../../models/admin.models';
-import { adminAllPassword, coffres } from '../../models/adminAllPassword.models';
+import {
+  adminAllPassword,
+  coffres,
+} from '../../models/adminAllPassword.models';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
-
+import { AuthService } from '../../services/auth.services';
 @Component({
   standalone: true,
   imports: [
@@ -53,41 +56,40 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
     SidebarModule,
     DialogModule,
     DropdownModule,
-    SelectButtonModule
+    SelectButtonModule,
   ],
 
   providers: [MessageService, BrowserModule, PrimeIcons],
-
 
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class DashboardComponent {
-  loginData!: loginRegister;
+  loginData: loginRegister | null = null;
   infoCoffre!: infoCoffre;
-  listGroupVault!:Array<vaultGroup>;
+  listGroupVault!: Array<vaultGroup>;
   newVault!: newVault;
   listCategories!: Array<categories>;
   listelibCategorie!: string[];
   listeidCategorie!: string[];
-  listeAdminUsers!:Array<users>;
-  listeAdminAllPassword!:Array<coffres>;
+  listeAdminUsers!: Array<users>;
+  listeAdminAllPassword!: Array<coffres>;
   sidebarVisible = false;
   addMenuVault = false;
   visibleAddCategorie = false;
   newCategorie = '';
   isModified = false;
-  visibleCreateGroup=false;
-  visibleAddAdmin=false;
-  groupName="";
-  urllogo="";
-  urlsite="";
-  email="";
-  username="";
-  password="";
-  newAdmin="";
-  note="";
-  sitename="";
+  visibleCreateGroup = false;
+  visibleAddAdmin = false;
+  groupName = '';
+  urllogo = '';
+  urlsite = '';
+  email = '';
+  username = '';
+  password = '';
+  newAdmin = '';
+  note = '';
+  sitename = '';
   selectedOption: string = 'passwords';
   stateOptions: any[] = [
     { label: 'Mots de passes', value: 'passwords' },
@@ -98,7 +100,8 @@ export class DashboardComponent {
     private loginRegisterService: LoginRegisterService,
     private dashboardService: DashboardService,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
   vaultListe: Array<vaultListe> = [];
   ngOnInit(): void {
@@ -109,25 +112,29 @@ export class DashboardComponent {
         this.vaultListe = response;
       },
     });
-    this.dashboardService.showGroupVault(this.loginData.access_token).subscribe({
-      next:(response:vaultGroup[])=>{
-        this.listGroupVault=response
-        console.log(this.listGroupVault)
-      }
-    })
+    this.dashboardService
+      .showGroupVault(this.loginData.access_token)
+      .subscribe({
+        next: (response: vaultGroup[]) => {
+          this.listGroupVault = response;
+          console.log(this.listGroupVault);
+        },
+      });
 
-    if(this.loginData.isAdmin === 1){
+    if (this.loginData.isAdmin === 1) {
       this.dashboardService.adminList(this.loginData.access_token).subscribe({
-        next:(reponse:admin)=>{
-          this.listeAdminUsers=reponse.users;
-        }
-      })
+        next: (reponse: admin) => {
+          this.listeAdminUsers = reponse.users;
+        },
+      });
 
-      this.dashboardService.showAllPasswords(this.loginData.access_token).subscribe({
-        next:(reponse:adminAllPassword)=>{
-          this.listeAdminAllPassword=reponse.coffres;
-        }
-      })
+      this.dashboardService
+        .showAllPasswords(this.loginData.access_token)
+        .subscribe({
+          next: (reponse: adminAllPassword) => {
+            this.listeAdminAllPassword = reponse.coffres;
+          },
+        });
     }
   }
 
@@ -135,8 +142,8 @@ export class DashboardComponent {
     this.dashboardService.disconnect(acces_token).subscribe({
       next: (response: logout) => {
         console.log('Authentification successful', response);
+        this.authService.logout(this.loginData);
         this.router.navigate(['/']);
-
       },
       error: (error) => {
         console.error('Authentification error', error);
@@ -145,68 +152,92 @@ export class DashboardComponent {
   }
 
   InfoCoffre(uuidCoffre: string) {
-    this.dashboardService
-      .SecretKey(uuidCoffre, this.loginData.access_token)
-      .pipe(
-        switchMap((secretkey: secretkey) => {
-          if (secretkey) {
-            return this.dashboardService
-              .getInfoCoffre(
-                uuidCoffre,
-                secretkey.key,
-                this.loginData.access_token
-              )
-              .pipe(
-                tap((infoCoffre: infoCoffre) => {
-                  this.infoCoffre = infoCoffre;
-                  this.sidebarVisible = true;
-                })
-              );
-          } else {
-            // Gérer le cas où secretkey est null
-            return throwError('La clé secrète est null');
-          }
-        }),
-        catchError((error) => {
-          console.error('Erreur:', error);
-          return throwError(error);
-        })
-      )
-      .subscribe();
+    if (this.loginData != null) {
+      const data = this.loginData;
+      this.dashboardService
+        .SecretKey(uuidCoffre, data.access_token)
+        .pipe(
+          switchMap((secretkey: secretkey) => {
+            if (secretkey) {
+              return this.dashboardService
+                .getInfoCoffre(uuidCoffre, secretkey.key, data.access_token)
+                .pipe(
+                  tap((infoCoffre: infoCoffre) => {
+                    this.infoCoffre = infoCoffre;
+                    this.sidebarVisible = true;
+                  })
+                );
+            } else {
+              // Gérer le cas où secretkey est null
+              return throwError('La clé secrète est null');
+            }
+          }),
+          catchError((error) => {
+            console.error('Erreur:', error);
+            return throwError(error);
+          })
+        )
+        .subscribe();
+    }
   }
 
   AddVault() {
-    this.addMenuVault = true;
-    this.dashboardService.getCategorie(this.loginData.access_token).subscribe({
-      next: (response: categories[]) => {
-        this.listCategories = response;
-        console.log(this.listCategories)
-      },
-    });
+    if (this.loginData != null) {
+      this.addMenuVault = true;
+      this.dashboardService
+        .getCategorie(this.loginData.access_token)
+        .subscribe({
+          next: (response: categories[]) => {
+            this.listCategories = response;
+            console.log(this.listCategories);
+          },
+        });
+    }
   }
   handleAddVault(
     urllogo: string,
-    sitename:string,
+    sitename: string,
     urlsite: string,
     email: string,
     username: string,
     password: string,
     note: string
   ) {
-    if((urllogo == "") || (sitename =="")|| (urlsite =="") || (email == "") || (username =="")|| (password=="") || (note=="")){
+    if (
+      urllogo == '' ||
+      sitename == '' ||
+      urlsite == '' ||
+      email == '' ||
+      username == '' ||
+      password == '' ||
+      note == ''
+    ) {
       this.messageService.add({
         severity: 'error',
         summary: 'Champs vide',
         detail: 'Champ vide veuillez tout compléter ',
       });
-    }
-    else{
-      const uuidcategorie=""
-      this.dashboardService.addVault(this.loginData.access_token ,urllogo ,sitename,urlsite,email,username,password,note, uuidcategorie).subscribe({
-        next:(response:any)=>{
-          console.log(response)
-        }
-      })
+    } else {
+      if (this.loginData != null) {
+        const uuidcategorie = '';
+        this.dashboardService
+          .addVault(
+            this.loginData.access_token,
+            urllogo,
+            sitename,
+            urlsite,
+            email,
+            username,
+            password,
+            note,
+            uuidcategorie
+          )
+          .subscribe({
+            next: (response: any) => {
+              console.log(response);
+            },
+          });
+      }
     }
   }
 
@@ -219,21 +250,23 @@ export class DashboardComponent {
   }
 
   addNewCategorie() {
-    this.dashboardService
-      .addNewCategorie(this.loginData.access_token, this.newCategorie)
-      .subscribe({
-        next: (response: addCategorie) => {
-          this.visibleAddCategorie = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Nouvelle Catégorie',
-            detail: 'Un nouvelle catégorie à été ajouté ',
-          });
-        },
-        error: (error) => {
-          console.error('Authentification error', error);
-        },
-      });
+    if (this.loginData != null) {
+      this.dashboardService
+        .addNewCategorie(this.loginData.access_token, this.newCategorie)
+        .subscribe({
+          next: (response: addCategorie) => {
+            this.visibleAddCategorie = false;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Nouvelle Catégorie',
+              detail: 'Un nouvelle catégorie à été ajouté ',
+            });
+          },
+          error: (error) => {
+            console.error('Authentification error', error);
+          },
+        });
+    }
   }
 
   onSidebarHide() {
@@ -245,74 +278,88 @@ export class DashboardComponent {
   }
 
   ModifVault(infoCoffre: infoCoffre) {
-    this.dashboardService
-      .SecretKey(infoCoffre.uuidCoffre, this.loginData.access_token)
+    if (this.loginData != null) {
+      const data = this.loginData;
+      this.dashboardService
+        .SecretKey(infoCoffre.uuidCoffre, data.access_token)
+        .subscribe({
+          next: (secretkey: secretkey) => {
+            if (secretkey != null) {
+              this.dashboardService
+                .modifVault(
+                  infoCoffre.uuidCoffre,
+                  secretkey.key,
+                  data.access_token,
+                  infoCoffre.email,
+                  infoCoffre.note,
+                  infoCoffre.password,
+                  infoCoffre.sitename,
+                  infoCoffre.urllogo,
+                  infoCoffre.urlsite,
+                  infoCoffre.username
+                )
+                .subscribe({
+                  next: (response: any) => {
+                    console.log(response);
+                    this.messageService.add({
+                      severity: 'success',
+                      summary: 'Changement',
+                      detail: 'Changement mise à jour ',
+                    });
+                    this.isModified = false;
+                  },
+                });
+            }
+          },
+          error: (error) => {
+            console.error('Authentification error', error);
+          },
+        });
+    }
+  }
+
+  DeleteVault(uuidCoffre: string) {
+    if (this.loginData != null) {
+      this.dashboardService
+        .deleteVault(uuidCoffre, this.loginData.access_token)
+        .subscribe({
+          next: (response: any) => {
+            console.log(response);
+          },
+        });
+    }
+  }
+
+  showCreateGroup() {
+    this.visibleCreateGroup = true;
+  }
+  CreateGroupe(groupName: string) {
+    if(this.loginData!=null){
+      this.dashboardService
+      .createGroup(groupName, this.loginData.access_token)
       .subscribe({
-        next: (secretkey: secretkey) => {
-          if (secretkey != null) {
-            this.dashboardService
-              .modifVault(
-                infoCoffre.uuidCoffre,
-                secretkey.key,
-                this.loginData.access_token,
-                infoCoffre.email,
-                infoCoffre.note,
-                infoCoffre.password,
-                infoCoffre.sitename,
-                infoCoffre.urllogo,
-                infoCoffre.urlsite,
-                infoCoffre.username
-              )
-              .subscribe({
-                next: (response: any) => {
-                  console.log(response);
-                  this.messageService.add({
-                    severity: 'success',
-                    summary: 'Changement',
-                    detail: 'Changement mise à jour ',
-                  });
-                  this.isModified = false;
-                },
-              });
-          }
+        next: (response: any) => {
+          console.log(response);
         },
-        error: (error) => {
-          console.error('Authentification error', error);
+      });
+    }
+    
+  }
+
+  ShowaddAdmin() {
+    this.visibleAddAdmin = true;
+  }
+
+  AddAdmin(email: string) {
+    if(this.loginData!=null){
+       this.dashboardService
+      .NewAdmin(email, this.loginData.access_token)
+      .subscribe({
+        next: (response: any) => {
+          console.log(response);
         },
       });
   }
-
-  DeleteVault(uuidCoffre:string){
-
-    this.dashboardService.deleteVault(uuidCoffre,this.loginData.access_token).subscribe({
-      next:(response:any)=>{
-        console.log(response)
-      }
-    })
-
-  }
-
-  showCreateGroup(){
-    this.visibleCreateGroup=true
-  }
-  CreateGroupe(groupName:string){
-    this.dashboardService.createGroup(groupName,this.loginData.access_token).subscribe({
-      next:(response:any)=>{
-        console.log(response)
-      }
-    })
-  }
-
-  ShowaddAdmin(){
-    this.visibleAddAdmin=true;
-  }
-
-  AddAdmin(email:string){
-    this.dashboardService.NewAdmin(email, this.loginData.access_token).subscribe({
-      next:(response:any)=>{
-        console.log(response)
-      }
-    })
-  }
-  
+    }
+   
 }

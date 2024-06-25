@@ -16,7 +16,7 @@ import { Message, MessageService } from 'primeng/api';
 import { MessagesModule } from 'primeng/messages';
 import { LoginRegisterService } from '../../services/loginRegister.services';
 import { ToastModule } from 'primeng/toast';
-import { AuthService } from '../../services/authentification.services';
+import { AuthService } from '../../services/auth.services';
 import { loginRegister } from '../../models/loginRegister.models';
 @Component({
   selector: 'app-root',
@@ -105,17 +105,16 @@ export class LoginComponent {
         next: (response: loginRegister) => {
           if (response.status != 'failed') {
             console.log('Authentification successful', response);
-            this.loginRegisterService.setLoginData(response)
+            this.authService.login(); 
+            this.loginRegisterService.setLoginData(response);
             this.router.navigate(['/dashboard']);
-                        
-            } else {
+          } else {
             this.erreurLogin = true;
             this.messages = [
               {
                 severity: 'error',
                 summary: 'Erreur Authentification',
-                detail:
-                  "Le mot de passe ou l'adresse mail rentrée est incorrect.",
+                detail: "Le mot de passe ou l'adresse mail rentrée est incorrect.",
               },
             ];
           }
@@ -133,6 +132,7 @@ export class LoginComponent {
         },
       });
   }
+  
 
   handleRegister(
     email: string,
