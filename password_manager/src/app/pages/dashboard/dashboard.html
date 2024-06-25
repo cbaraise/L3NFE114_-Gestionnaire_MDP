@@ -21,25 +21,65 @@
 @if(sidebarVisible){
  
 <p-sidebar [(visible)]="sidebarVisible" [dismissible]="true" (onHide)="onSidebarHide()" position="right">
+  <div class="form-container">
+    <div class="flex align-items-center gap-2 justify-content-between">
+      <p-avatar image="{{infoCoffre.urllogo}}" placeholder="logo" width="100" />
+      <span class="font-bold text-lg">
   Url Logo:
   <input type="text" pInputText [(ngModel)]="infoCoffre.urllogo" (ngModelChange)="onFieldChange()" />
+  </span>
+  <span class="font-bold text-lg">
   Nom du site:
   <input type="text" pInputText [(ngModel)]="infoCoffre.sitename" (ngModelChange)="onFieldChange()"/>
+</span>
+  <span class="font-bold text-lg">
   Url du site:
   <input type="text" pInputText [(ngModel)]="infoCoffre.urlsite"  (ngModelChange)="onFieldChange()"/>
+</span>
+  <span class="font-bold text-lg">
   Email:
   <input type="text" pInputText [(ngModel)]="infoCoffre.email" (ngModelChange)="onFieldChange()" />
+</span>
+  <span class="font-bold text-lg">
   Nom d'utilisateur:
   <input type="text" pInputText [(ngModel)]="infoCoffre.username"  (ngModelChange)="onFieldChange()"/>
+</span>
+  <span class="font-bold text-lg">
   Mot de passe:
   <p-password [(ngModel)]="infoCoffre.password" [feedback]="false" [toggleMask]="true" (ngModelChange)="onFieldChange()"/>
+</span>
+  <span class="font-bold text-lg">
   Note:
   <textarea type="text" pInputText [(ngModel)]="infoCoffre.note"(ngModelChange)="onFieldChange()"></textarea>
-
+</span>
+</div>
+<div class="categories">
+  <label>Categories:</label>
+  <p-dropdown [options]="listelibCategorie" [(ngModel)]="listelibCategorie" optionLabel="name" class="p-5"
+    placeholder="Selectionner une catégorie" />
+</div>
+</div>
   <p-button [disabled]="!isModified" (onClick)="ModifVault(infoCoffre)">Modifier</p-button>
   <p-button (onClick)="DeleteVault(infoCoffre.uuidCoffre)">Supprimer</p-button>
-
+    <label>Url:</label>
+    <input type="text" pInputText [(ngModel)]="infoCoffre.urlsite" placeholder="Site Web" />
+    <label>Username:</label>
+    <input type="text" pInputText [(ngModel)]="infoCoffre.username" placeholder="Username" />
+    <label>Email:</label>
+    <input type="text" pInputText [(ngModel)]="infoCoffre.email" placeholder="Email" />
+    <label>Mot de passe:</label>
+    <p-password [(ngModel)]="infoCoffre.password" [feedback]="false" [toggleMask]="true"
+      placeholder="Mot de passe"></p-password>
+    <label>Notes:</label><br>
+    <textarea pInputTextarea [(ngModel)]="infoCoffre.note" placeholder="Note"></textarea>
+    <br>
+    <div class="buttons flex justify-content-between p-5 gap-2">
+      <button pButton type="button" label="Annuler" (click)="onCancel()"></button>
+      <button pButton type="button" label="Enregistrer" (click)="onSave()"></button>
+    </div>
+  </div>
 </p-sidebar>
+
 }
 
 
@@ -122,3 +162,4 @@
 
 
     
+

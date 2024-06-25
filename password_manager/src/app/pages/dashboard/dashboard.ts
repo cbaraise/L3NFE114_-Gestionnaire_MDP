@@ -31,9 +31,14 @@ import { vaultGroup } from '../../models/vaultGroup.models';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { admin, users } from '../../models/admin.models';
 import { adminAllPassword, coffres } from '../../models/adminAllPassword.models';
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
+
 @Component({
   standalone: true,
   imports: [
+    AvatarModule,
+    AvatarGroupModule,
     RouterOutlet,
     InputTextModule,
     PasswordModule,
@@ -50,7 +55,10 @@ import { adminAllPassword, coffres } from '../../models/adminAllPassword.models'
     DropdownModule,
     SelectButtonModule
   ],
+
   providers: [MessageService, BrowserModule, PrimeIcons],
+
+
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -89,8 +97,8 @@ export class DashboardComponent {
   constructor(
     private loginRegisterService: LoginRegisterService,
     private dashboardService: DashboardService,
-    private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
   vaultListe: Array<vaultListe> = [];
   ngOnInit(): void {
@@ -128,6 +136,7 @@ export class DashboardComponent {
       next: (response: logout) => {
         console.log('Authentification successful', response);
         this.router.navigate(['/']);
+
       },
       error: (error) => {
         console.error('Authentification error', error);
