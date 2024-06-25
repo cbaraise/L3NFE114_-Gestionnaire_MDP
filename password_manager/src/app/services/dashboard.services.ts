@@ -182,5 +182,17 @@ export class DashboardService {
     
     }
 
-  
+
+    shareGroupValut(acces_token:string,emailusershare:string,uuidGroup:string, isExpired:number){
+      
+        const endpointUrl = environnement.baseUri + `/group/share`;
+        const body = {emailusershare , uuidGroup , isExpired};
+        const header = new HttpHeaders({
+          Authorization: `Bearer ${acces_token}`,
+        });
+        return this.httpClient
+          .post<any>(endpointUrl, body, { headers: header })
+          .pipe(catchError(this.handleError));
+      }
+
 }

@@ -1,11 +1,19 @@
 import {
   TimesIcon
 } from "./chunk-WTETOWXP.js";
-import "./chunk-JQDMRBJA.js";
+import {
+  animate,
+  animation,
+  style,
+  transition,
+  trigger,
+  useAnimation
+} from "./chunk-ZAXICX7P.js";
 import {
   Ripple,
   RippleModule
 } from "./chunk-7EFQWFRS.js";
+import "./chunk-JQDMRBJA.js";
 import {
   DomHandler
 } from "./chunk-TKJMWDM5.js";
@@ -15,14 +23,6 @@ import {
   SharedModule,
   zindexutils
 } from "./chunk-C3H73MNQ.js";
-import {
-  animate,
-  animation,
-  style,
-  transition,
-  trigger,
-  useAnimation
-} from "./chunk-ZAXICX7P.js";
 import {
   CommonModule,
   DOCUMENT,
@@ -80,8 +80,8 @@ import {
   ɵɵtemplate,
   ɵɵtemplateRefExtractor
 } from "./chunk-QHIF2FQR.js";
-import "./chunk-V2DXGMIT.js";
 import "./chunk-UKEHM6V6.js";
+import "./chunk-V2DXGMIT.js";
 import "./chunk-ZDOIMVJD.js";
 
 // node_modules/primeng/fesm2022/primeng-sidebar.mjs
