@@ -30,10 +30,12 @@ import { PrimeIcons } from 'primeng/api';
 import { vaultGroup } from '../../models/vaultGroup.models';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { admin, users } from '../../models/admin.models';
+import { CheckboxModule } from 'primeng/checkbox';
 import {
   adminAllPassword,
   coffres,
 } from '../../models/adminAllPassword.models';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { AuthService } from '../../services/auth.services';
@@ -57,6 +59,8 @@ import { AuthService } from '../../services/auth.services';
     DialogModule,
     DropdownModule,
     SelectButtonModule,
+    RadioButtonModule,
+    CheckboxModule
   ],
 
   providers: [MessageService, BrowserModule, PrimeIcons],
@@ -81,6 +85,9 @@ export class DashboardComponent {
   isModified = false;
   visibleCreateGroup = false;
   visibleAddAdmin = false;
+  isExpired=false;
+  selectedGroup="";
+  emailShareGroup="";
   groupName = '';
   urllogo = '';
   urlsite = '';
@@ -96,6 +103,7 @@ export class DashboardComponent {
     { label: 'Administration', value: 'admin' },
   ];
   selectedCategory: categories | null = null;
+  visibleShareGroup=false;
   constructor(
     private loginRegisterService: LoginRegisterService,
     private dashboardService: DashboardService,
@@ -348,6 +356,23 @@ export class DashboardComponent {
 
   ShowaddAdmin() {
     this.visibleAddAdmin = true;
+  }
+
+  showShareGroup(){
+    this.visibleShareGroup=true;
+  }
+
+  shareGroupVault(emailShareGroup:string ,selectedGroup:string, isExpired:boolean){
+    const numericValue: number = isExpired ? 1 : 0;
+    console.log("test:"+emailShareGroup+" "+selectedGroup+" "+numericValue)
+
+    if(this.loginData!=null){
+      this.dashboardService.shareGroupValut(this.loginData.access_token,emailShareGroup,selectedGroup, numericValue).subscribe({
+        next:(response:any)=>{
+          console.log(response)
+        }
+      })
+    }
   }
 
   AddAdmin(email: string) {

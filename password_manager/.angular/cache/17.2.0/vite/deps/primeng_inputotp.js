@@ -1,15 +1,15 @@
 import {
-  AutoFocus,
-  AutoFocusModule
-} from "./chunk-TGUZRQB5.js";
-import {
   InputText,
   InputTextModule
 } from "./chunk-HFDTZ4DJ.js";
-import "./chunk-TKJMWDM5.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-S2AZBDXB.js";
+import {
+  AutoFocus,
+  AutoFocusModule
+} from "./chunk-TGUZRQB5.js";
+import "./chunk-TKJMWDM5.js";
 import {
   PrimeTemplate,
   SharedModule
@@ -58,8 +58,8 @@ import {
   ɵɵrestoreView,
   ɵɵtemplate
 } from "./chunk-QHIF2FQR.js";
-import "./chunk-V2DXGMIT.js";
 import "./chunk-UKEHM6V6.js";
+import "./chunk-V2DXGMIT.js";
 import "./chunk-ZDOIMVJD.js";
 
 // node_modules/primeng/fesm2022/primeng-inputotp.mjs

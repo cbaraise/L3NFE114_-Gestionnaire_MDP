@@ -120,6 +120,28 @@ Liste des groupes
     </tr>
   </ng-template>
 </p-table>
+<p-button (onClick)="showShareGroup()">Partager</p-button>
+<p-dialog header="Créer un nouveaut groupe" [modal]="true" [(visible)]="visibleShareGroup">
+  Email:
+  <input type="email" pInputText [(ngModel)]="emailShareGroup" />
+  <div *ngFor="let group of listGroupVault" class="field-checkbox">
+    <p-radioButton 
+        [inputId]="group.uuidGroupe"
+        name="category" 
+        [value]="group.uuidGroupe" 
+        [(ngModel)]="selectedGroup" />
+    <label [for]="group.uuidGroupe" class="ml-2">
+        {{ group.Nom }}
+    </label>
+   
+</div>
+Temporaire:
+<p-checkbox 
+[(ngModel)]="isExpired" 
+[binary]="true" 
+inputId="binary" />
+  <p-button (click)="shareGroupVault(emailShareGroup ,selectedGroup, isExpired)">Ajouter</p-button>
+</p-dialog>
 
 <p-dialog header="Créer un nouveaut groupe" [modal]="true" [(visible)]="visibleCreateGroup">
   Nom du groupe:
