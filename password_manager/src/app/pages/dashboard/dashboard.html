@@ -1,6 +1,186 @@
 <div class="card flex flex-column justify-content-center mt-5 mb-2 w-full ">
-    <div class="text-center">
-      <img src="assets\images\logo.png" width="700" />
-      <h3>Votre Gestionnaire de mots de passe préféré !</h3>
+  <div class="text-center">
+    <img src="assets\images\logo.png" width="700" />
+    <h3>Votre Gestionnaire de mots de passe préféré !</h3>
+  </div>
+  <p>Bonjour, Bienvenue {{loginData!.username}}</p>
+  <p-button (onClick)="AddVault()">Ajouter un mot de passe </p-button>
+  <p-button (onClick)="showAddCategorie()">Ajouter une catégorie</p-button>
+
+
+  <p-table [value]="vaultListe" [tableStyle]="{ 'min-width': '50rem' }" selectionMode="single">
+    <ng-template pTemplate="body" let-vault>
+      <tr (click)="InfoCoffre(vault.uuidCoffre)">
+        <td>{{vault.sitename}}</td>
+        <td> {{vault.urllogo}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <p-button (onClick)="disconnect(loginData!.access_token)">Déconnexion</p-button>
+</div>
+@if(sidebarVisible){
+
+<p-sidebar [(visible)]="sidebarVisible" [dismissible]="true" (onHide)="onSidebarHide()" position="right">
+  <div class="form-container">
+    <div class="flex align-items-center gap-2 justify-content-between">
+      <p-avatar image="{{infoCoffre.urllogo}}" placeholder="logo" width="100" />
+      <span class="font-bold text-lg">
+        Url Logo:
+        <input type="text" pInputText [(ngModel)]="infoCoffre.urllogo" (ngModelChange)="onFieldChange()" />
+      </span>
+      <span class="font-bold text-lg">
+        Nom du site:
+        <input type="text" pInputText [(ngModel)]="infoCoffre.sitename" (ngModelChange)="onFieldChange()" />
+      </span>
+      <span class="font-bold text-lg">
+        Url du site:
+        <input type="text" pInputText [(ngModel)]="infoCoffre.urlsite" (ngModelChange)="onFieldChange()" />
+      </span>
+      <span class="font-bold text-lg">
+        Email:
+        <input type="text" pInputText [(ngModel)]="infoCoffre.email" (ngModelChange)="onFieldChange()" />
+      </span>
+      <span class="font-bold text-lg">
+        Nom d'utilisateur:
+        <input type="text" pInputText [(ngModel)]="infoCoffre.username" (ngModelChange)="onFieldChange()" />
+      </span>
+      <span class="font-bold text-lg">
+        Mot de passe:
+        <p-password [(ngModel)]="infoCoffre.password" [feedback]="false" [toggleMask]="true"
+          (ngModelChange)="onFieldChange()" />
+      </span>
+      <span class="font-bold text-lg">
+        Note:
+        <textarea type="text" pInputText [(ngModel)]="infoCoffre.note" (ngModelChange)="onFieldChange()"></textarea>
+      </span>
+    </div>
+    <div class="categories">
+      <label>Categories:</label>
+      <p-dropdown [options]="listelibCategorie" [(ngModel)]="listelibCategorie" optionLabel="name" class="p-5"
+        placeholder="Selectionner une catégorie" />
     </div>
   </div>
+  <p-button [disabled]="!isModified" (onClick)="ModifVault(infoCoffre)">Modifier</p-button>
+  <p-button (onClick)="DeleteVault(infoCoffre.uuidCoffre)">Supprimer</p-button>
+  <label>Url:</label>
+  <input type="text" pInputText [(ngModel)]="infoCoffre.urlsite" placeholder="Site Web"
+    (ngModelChange)="onFieldChange()" />
+  <label>Username:</label>
+  <input type="text" pInputText [(ngModel)]="infoCoffre.username" placeholder="Username"
+    (ngModelChange)="onFieldChange()" />
+  <label>Email:</label>
+  <input type="text" pInputText [(ngModel)]="infoCoffre.email" placeholder="Email" (ngModelChange)="onFieldChange()" />
+  <label>Mot de passe:</label>
+  <p-password [(ngModel)]="infoCoffre.password" [feedback]="false" [toggleMask]="true" placeholder="Mot de passe"
+    (ngModelChange)="onFieldChange()"></p-password>
+  <label>Notes:</label><br>
+  <textarea pInputTextarea [(ngModel)]="infoCoffre.note" placeholder="Note"
+    (ngModelChange)="onFieldChange()"></textarea>
+  <br>
+  <div class="buttons flex justify-content-between p-5 gap-2">
+    <!-- <button pButton type="button" label="Annuler" (click)="onCancel()"></button>
+      <button pButton type="button" label="Enregistrer" (click)="onSave()"></button> -->
+  </div>
+</p-sidebar>
+
+}
+
+
+<p-dialog header="Ajouter un nouveaut mot de passe" [modal]="true" [(visible)]="addMenuVault">
+
+  Url du logo:
+  <input type="text" pInputText [(ngModel)]="urllogo" />
+  Nom du site:
+  <input type="text" pInputText [(ngModel)]="sitename" />
+  Url du site:
+  <input type="text" pInputText [(ngModel)]="urlsite" />
+  Email:
+  <input type="text" pInputText [(ngModel)]="email" />
+  Nom d'utilisateur:
+  <input type="text" pInputText [(ngModel)]="username" />
+  Mot de passe:
+  <p-password [(ngModel)]="password" [feedback]="false" [toggleMask]="true" />
+  Note:
+  <textarea type="text" pInputText [(ngModel)]="note"></textarea>
+  <p-button (onClick)="handleAddVault(urllogo,sitename,urlsite,email, username,password , note)">Ajouter</p-button>
+</p-dialog>
+
+
+<p-button (onClick)="showCreateGroup()">Créer un groupe </p-button>
+<p-dialog header="Ajouter une nouvelle catégorie" [modal]="true" [closable]="true" [(visible)]="visibleAddCategorie"
+  [style]="{ width: '25rem' }">
+  <input type="text" pInputText [(ngModel)]="newCategorie" />
+  <p-button (click)="addNewCategorie()">Valider</p-button>
+</p-dialog>
+Liste des groupes
+<p-table [value]="listGroupVault" [tableStyle]="{ 'min-width': '50rem' }" selectionMode="single">
+  <ng-template pTemplate="body" let-vault>
+    <tr>
+      <td>{{vault.Nom}}</td>
+    </tr>
+  </ng-template>
+</p-table>
+<p-button (onClick)="showShareGroup()">Partager</p-button>
+<p-dialog header="Créer un nouveaut groupe" [modal]="true" [(visible)]="visibleShareGroup">
+  Email:
+  <input type="email" pInputText [(ngModel)]="emailShareGroup" />
+  <div *ngFor="let group of listGroupVault" class="field-checkbox">
+    <p-radioButton 
+        [inputId]="group.uuidGroupe"
+        name="category" 
+        [value]="group.uuidGroupe" 
+        [(ngModel)]="selectedGroup" />
+    <label [for]="group.uuidGroupe" class="ml-2">
+        {{ group.Nom }}
+    </label>
+   
+</div>
+Temporaire:
+<p-checkbox 
+[(ngModel)]="isExpired" 
+[binary]="true" 
+inputId="binary" />
+  <p-button (click)="shareGroupVault(emailShareGroup ,selectedGroup, isExpired)">Ajouter</p-button>
+</p-dialog>
+
+<p-dialog header="Créer un nouveaut groupe" [modal]="true" [(visible)]="visibleCreateGroup">
+  Nom du groupe:
+  <input type="text" pInputText [(ngModel)]="groupName" />
+  <p-button (click)="CreateGroupe(groupName)">Créer</p-button>
+</p-dialog>
+
+<div *ngIf="loginData?.isAdmin=== 1">
+  <p-button (onClick)="ShowaddAdmin()">Ajouter un Admin</p-button>
+  <p-table [value]="listeAdminUsers" [tableStyle]="{ 'min-width': '50rem' }" selectionMode="single">
+    <ng-template pTemplate="header">
+      <h3>Liste des utilisateurs Admins:</h3>
+    </ng-template>
+    <ng-template pTemplate="body" let-users>
+      <tr>
+        <td>{{users.email}}</td>
+        <td>{{users.username}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog header="Ajouter un nouvelle Admin" [modal]="true" [(visible)]="visibleAddAdmin">
+    Adresse mail:
+    <input type="email" pInputText [(ngModel)]="newAdmin" />
+    <p-button (click)="AddAdmin(newAdmin)">Créer</p-button>
+  </p-dialog>
+
+
+  <p-table [value]="listeAdminAllPassword" [tableStyle]="{ 'min-width': '50rem' }" selectionMode="single">
+    <ng-template pTemplate="header">
+      <h3>Liste des mots de passes :</h3>
+    </ng-template>
+    <ng-template pTemplate="body" let-coffre>
+      <tr>
+        <td>{{coffre.password}}</td>
+        <td>{{coffre.urllogo}}</td>
+        <td>{{coffre.urlsite}}</td>
+        <td>{{coffre.username}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

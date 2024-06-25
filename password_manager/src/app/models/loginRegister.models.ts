@@ -2,8 +2,7 @@
 export interface loginRegister{
     status:string;
     message:string;
-    acces_token:string;
-    refresh_token:string;
-
-   
+    access_token:string;
+    isAdmin:number;
+    username:string;
 }

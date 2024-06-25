@@ -11,8 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
-
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -32,7 +31,7 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   
   
-  providers: [BrowserModule, provideAnimations()],
+  providers: [BrowserModule, provideAnimations() ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
