@@ -1,4 +1,4 @@
-→lancer l'API:
+→lancer l'API lancer cmd:
 -cd chemin/Répertoire/Projet
 puis
 - venv\Scripts\activate
